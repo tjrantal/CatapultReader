@@ -1,0 +1,21 @@
+%Copyright (C) 2014  Timo Rantalainen tjrantal at gmail dot com
+%
+%   This program is free software: you can redistribute it and/or modify
+%    it under the terms of the GNU General Public License as published by
+%    the Free Software Foundation, either version 3 of the License, or
+%    (at your option) any later version.
+%
+%    This program is distributed in the hope that it will be useful,
+%    but WITHOUT ANY WARRANTY; without even the implied warranty of
+%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%    GNU General Public License for more details.
+%
+%    You should have received a copy of the GNU General Public License
+%    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Octave/Matlab Catapult inertial motion unit .raw file reader. Reverse engineered, as Catapult were unwilling to reveal the file format (and I didn't spot the specification in the manual either). As a consequence, the reader will not work for all catapult files, nor are there any guarantees that the results are correct for any files, even if it appears to work. No compression handling built in, so the reader cannot handle compressed files.
+
+The sign of data differs between data read from raw files with this function and corresponding data exported with the Catapult Sprint software. Moreover, the order of channels differs from the export as well.
+
+Look to sampleRead.m for use. Sample data provided in the sampleData folder.
+
