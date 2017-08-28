@@ -100,6 +100,10 @@ function data = catapultGPSOptimEyeRawReader(fileIn,samplingFreq)
     end
 
 	data.channels = cell(1,numel(recordType));
+    data.GPS = {};
+    data.GPSdate = {};
+    data.GPStime = {};
+    data.speed = {};
     
 %     %Use the java class to read the data
 %     cRead = javaObject('deakin.timo.catapultRead.CatapultRead',double(memData));%
@@ -115,9 +119,14 @@ function data = catapultGPSOptimEyeRawReader(fileIn,samplingFreq)
         i = 1;
 
         ignore = 0;
-        while i<length(memData) % && i< 5000000
+        while i<length(memData) %&& i< 1000000
             switch typecast(memData(i:i+1),'uint16') 
                 case typecast(packetIdentifiers(1,:),'uint16')  %GPS 2+139
+                    data.GPS{end+1} = memData(i+2:i+2-1+packetLengths(1)-2);
+                    data.speed = [data.speed double(typecast(data.GPS{end}(81:(81+3)),'int32'))/1000 ];
+%                     if data.speed{end} > 0
+%                        keyboard; 
+%                     end
                     i = i+packetLengths(1);
                 case typecast(packetIdentifiers(2,:),'uint16')  %IMU packet 2+19
                     %Decode IMU packet
@@ -131,13 +140,15 @@ function data = catapultGPSOptimEyeRawReader(fileIn,samplingFreq)
                     end
                     i = i+packetLengths(2);
                 case typecast(packetIdentifiers(3,:),'uint16')  %GPS date 2+21
+                    data.GPSdate{end+1} = memData(i+2:i+2+packetLengths(3));
                     i = i+packetLengths(3);
                 case typecast(packetIdentifiers(4,:),'uint16')  %GPS time 2+21
+                    data.GPStime{end+1} = memData(i+2:i+2+packetLengths(4));
                     i = i+packetLengths(4);
                 otherwise   %Unknown package
                     i = i+1;
             end
-            disp(sprintf('i = %06d\r',i));
+%             disp(sprintf('i = %06d\r',i));
         end
         
 %         figure
